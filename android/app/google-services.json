@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1004179677678",
+    "project_id": "histora-mobile",
+    "storage_bucket": "histora-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004179677678:android:76c70df69b144a90ec6eff",
+        "android_client_info": {
+          "package_name": "com.theboringapp.histora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004179677678-f2kc5pppmifks9cce6i3jf84e1nuo161.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9WjNK-JU80dp3Bg2br6p8fhVT82A7Y4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004179677678-f2kc5pppmifks9cce6i3jf84e1nuo161.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
