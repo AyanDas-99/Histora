@@ -28,7 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       case AuthResult.success:
         final user = authenticator.currentUser;
         if (user == null) {
-          emit(AuthStateError(failure: UserLoadingFailure()));
+          emit(const AuthStateError(failure: UserLoadingFailure()));
         } else {
           emit(AuthStateLoggedIn(user: user));
         }

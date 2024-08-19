@@ -2,13 +2,13 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:histora/state/structure/models/history.dart';
-import 'package:histora/state/structure/typedefs/coordinate.dart';
+import 'package:histora/state/gps/models/coordinate.dart';
 
 class Structure extends Equatable {
   final String id;
   final String title;
   final String description;
-  final List<String>? images;
+  final List<String> images;
   final History history;
   final Coordinate coordinate;
 
@@ -16,7 +16,7 @@ class Structure extends Equatable {
     required this.id,
     required this.title,
     required this.description,
-    this.images,
+    required this.images,
     required this.history,
     required this.coordinate,
   });
@@ -43,11 +43,9 @@ class Structure extends Equatable {
       id: map['id'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
-      images: map['images'] != null
-          ? List<String>.from((map['images'] as List<String>))
-          : null,
+      images: List<String>.from((map['images'] as List<String>)),
       history: History(history: map['history'] as String),
-      coordinate: (map['latitude'] as double, map['longitude'] as double),
+      coordinate: (map['lat'] as double, map['lon'] as double),
     );
   }
 

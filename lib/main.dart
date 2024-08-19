@@ -4,7 +4,6 @@ import 'package:histora/core/route/app_router.dart';
 import 'package:histora/depedency_injector.dart';
 import 'package:histora/env/env.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:firebase_core/firebase_core.dart';
 

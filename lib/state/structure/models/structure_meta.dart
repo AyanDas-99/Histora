@@ -2,31 +2,31 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:histora/state/structure/typedefs/coordinate.dart';
+import 'package:histora/state/gps/models/coordinate.dart';
 
 class StructureMeta extends Equatable {
-  final String structureId;
+  final String id;
   final Coordinate coordinate;
 
   const StructureMeta({
-    required this.structureId,
+    required this.id,
     required this.coordinate,
   });
 
   StructureMeta copyWith({
-    String? structureId,
+    String? id,
     Coordinate? coordinate,
   }) {
     return StructureMeta(
-      structureId: structureId ?? this.structureId,
+      id: id ?? this.id,
       coordinate: coordinate ?? this.coordinate,
     );
   }
 
   factory StructureMeta.fromMap(Map<String, dynamic> map) {
     return StructureMeta(
-      structureId: map['structureId'] as String,
-      coordinate: (map['latitude'] as double, map['longitude'] as double),
+      id: map['id'] as String,
+      coordinate: (map['lat'] as double, map['lon'] as double),
     );
   }
 
@@ -34,5 +34,5 @@ class StructureMeta extends Equatable {
       StructureMeta.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  List<Object?> get props => [structureId, coordinate];
+  List<Object?> get props => [id, coordinate];
 }
