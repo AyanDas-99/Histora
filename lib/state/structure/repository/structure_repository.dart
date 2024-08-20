@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:histora/core/error/exception.dart';
@@ -5,6 +7,7 @@ import 'package:histora/state/gps/utils/haversine_distance.dart';
 import 'package:histora/state/structure/models/structure.dart';
 import 'package:histora/state/structure/models/structure_meta.dart';
 import 'package:histora/state/gps/models/coordinate.dart';
+import 'package:http/http.dart' as http;
 
 abstract class StructureRepository {
   ///Get 2 [StructureMeta] nearest to the coordinate
@@ -29,11 +32,17 @@ abstract class StructureRepository {
   ///
   /// Throws [StructureMetaException] on error
   Future<List<StructureMeta>> getAllStructureMeta();
+
+  /// Get [Uint8List] from image download url
+  ///
+  /// Throws [HttpException] on error
+  Future<Uint8List> getImageBytesFromUrl(String url);
 }
 
 class StructureRepositoryImpl implements StructureRepository {
   final FirebaseStorage storage;
   final FirebaseFirestore firestore;
+  final http.Client httpClient;
 
   ///Radius to use for nearest structure to user location in mtrs
   static const radius = 200;
@@ -41,6 +50,7 @@ class StructureRepositoryImpl implements StructureRepository {
   StructureRepositoryImpl({
     required this.storage,
     required this.firestore,
+    required this.httpClient,
   });
 
   @override
@@ -96,5 +106,11 @@ class StructureRepositoryImpl implements StructureRepository {
     final structureMetas =
         result.docs.map((doc) => StructureMeta.fromMap(doc.data())).toList();
     return structureMetas;
+  }
+
+  @override
+  Future<Uint8List> getImageBytesFromUrl(String url) async {
+    final result = await httpClient.get(Uri.parse(url));
+    return result.bodyBytes;
   }
 }

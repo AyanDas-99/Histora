@@ -38,3 +38,9 @@ class GpsException implements Exception {
 
   GpsException(this.message);
 }
+
+class AiException implements Exception {
+  final String message;
+
+  AiException(this.message);
+}

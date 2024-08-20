@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:histora/core/view/loader_page.dart';
 import 'package:histora/depedency_injector.dart';
+import 'package:histora/main.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
 import 'package:histora/view/auth/login_screen.dart';
 import 'package:histora/view/home/home_screen.dart';
@@ -15,7 +16,7 @@ class AppRouter {
         path: HomeScreen.path,
         name: HomeScreen.name,
         pageBuilder: (context, state) {
-          return const MaterialPage(child: HomeScreen());
+          return const MaterialPage(child: MyHomePage());
         },
       ),
 

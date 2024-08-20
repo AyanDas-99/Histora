@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:histora/core/route/app_router.dart';
+import 'package:histora/core/utils/pick_images.dart';
 import 'package:histora/depedency_injector.dart';
-import 'package:histora/env/env.dart';
+import 'package:histora/state/AI/ai_result.dart';
+import 'package:histora/state/AI/repository/ai_repository.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,67 +60,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     try {
-      // final files = await ImagePicker().pickMultiImage();
-      // if (files.isEmpty) {
-      //   throw Exception('No file selected');
-      // }
+      final image = await pickImage();
+      if (image == null) {
+        return result = 'No image selected';
+      }
 
-      final apiKey = Env.geminiKey;
+      final response = await http.get(Uri.parse(
+          'https://firebasestorage.googleapis.com/v0/b/histora-mobile.appspot.com/o/assets%2FJapanese%20Bunkere2587907-9369-41c7-b472-c8dad05f49f5%2Fa8ebad39-b2d7-4656-b6bb-f77f135fffbd?alt=media&token=c7e0b221-d2a7-4417-8fa1-b8027cd15eee'));
 
-      final model = GenerativeModel(
-        model: 'gemini-1.5-flash',
-        apiKey: apiKey,
-        // safetySettings: Adjust safety settings
-        // See https://ai.google.dev/gemini-api/docs/safety-settings
-        generationConfig: GenerationConfig(
-          temperature: 1,
-          topK: 64,
-          topP: 0.95,
-          maxOutputTokens: 8192,
-          responseMimeType: 'text/plain',
+      final aiResponse = await AiRepositoryImpl().compareImageSets(
+        UserImageBytes(image: await image.readAsBytes()),
+        AssetImageBytes(
+          images: [
+            response.bodyBytes,
+          ],
         ),
       );
-
-      // final List<DataPart> dataFiles = [];
-
-      // for (XFile file in files) {
-      //   final DataPart data = DataPart(
-      //     file.mimeType ?? 'image/jpeg',
-      //     await file.readAsBytes(),
-      //   );
-      //   dataFiles.add(data);
-      // }
-
-      final content = Content.multi([
-        // ...dataFiles,
-        TextPart(
-            '[https://firebasestorage.googleapis.com/v0/b/verve-f9fb9.appspot.com/o/CuuM73OXrVcQ1zwBa5oHy7ChSpJ2%2Fimages%2Fa96ba06b-280a-4125-b8f7-8371ff495f98?alt=media&token=0258c2b2-0d45-4605-9f75-0df6116ac918]\n\n[https://firebasestorage.googleapis.com/v0/b/verve-f9fb9.appspot.com/o/CuuM73OXrVcQ1zwBa5oHy7ChSpJ2%2Fimages%2F264643d2-a0cd-4330-aecc-cac9df747b28?alt=media&token=7355a6e5-f34d-4512-a933-d7912b40cac0]'),
-
-        TextPart(
-            '''Analyze the provided images to determine confidence(percentage) in how similar they are in appearance.
-            \n\n**Input:**\n* 
-            Image 1: Single image of a historical structure.\n* 
-            Image Set: Multiple images of another historical structure, potentially showing different angles or lighting conditions.\n\n
-            **Output:**\n* Json value indicating whether Image 1 and Image Set represent the same structure.\nexample:\n
-            {\nisSame: (true if confidence is more than 95%),\n
-            message: generated message,
-            confidence: (percentage of how similar they are)
-            }\n\n
-            **Criteria:**\n
-            * Focus on architectural elements and overall structure shape.\n
-            * Consider variations in lighting, angle, and perspective.\n
-            * Disregard changes in surrounding environment or minor structural details.\n
-            * Treat images of the same person with different postures as different structures.'''),
-      ]);
-
-      final GenerateContentResponse response =
-          await model.generateContent([content]);
-      print(response.text);
-      if (response.text != null) {
-        result = response.text!;
-      } else {
-        result = 'Nothing found';
-      }
+      print(aiResponse);
+      result = aiResponse.message;
     } catch (e) {
       result = e.toString();
     } finally {
