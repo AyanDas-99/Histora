@@ -26,7 +26,10 @@ class StructureMeta extends Equatable {
   factory StructureMeta.fromMap(Map<String, dynamic> map) {
     return StructureMeta(
       id: map['id'] as String,
-      coordinate: (map['lat'] as double, map['lon'] as double),
+      coordinate: (
+        (map['lat'] as num).toDouble(),
+        (map['lon'] as num).toDouble(),
+      ),
     );
   }
 

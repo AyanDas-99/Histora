@@ -7,6 +7,7 @@ import 'package:histora/state/AI/ai_result.dart';
 import 'package:histora/state/AI/repository/ai_repository.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:histora/state/history_feature/bloc/history_bloc.dart';
 import 'package:http/http.dart' as http;
 
 void main() async {
@@ -16,6 +17,9 @@ void main() async {
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
       create: (context) => sl<AuthBloc>(),
+    ),
+    BlocProvider(
+      create: (context) => sl<HistoryBloc>(),
     )
   ], child: const MyApp()));
 }

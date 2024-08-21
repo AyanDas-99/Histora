@@ -45,7 +45,10 @@ class Structure extends Equatable {
       description: map['description'] as String,
       images: List<String>.from((map['images'] as List<String>)),
       history: History(history: map['history'] as String),
-      coordinate: (map['lat'] as double, map['lon'] as double),
+      coordinate: (
+        (map['lat'] as num).toDouble(),
+        (map['lon'] as num).toDouble()
+      ),
     );
   }
 

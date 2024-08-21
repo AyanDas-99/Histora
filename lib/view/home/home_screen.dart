@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator_android/geolocator_android.dart';
+import 'package:histora/core/utils/pick_images.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
-import 'package:histora/state/gps/respository/gps_repository.dart';
-import 'package:histora/state/structure/models/history.dart';
-import 'package:histora/state/gps/models/coordinate.dart';
+import 'package:histora/state/history_feature/bloc/history_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,83 +15,102 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              if (state is AuthStateLoggedIn) {
-                return Text('${state.user.uid} ${state.user.displayName}');
-              } else {
-                return Container();
-              }
-            },
-          ),
-          const SizedBox(height: 50),
-          TextButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(Logout());
-            },
-            child: const Text('Log out'),
-          ),
-          Text("hello world"),
-          const SizedBox(height: 20),
-          History(history: '''
- <h1>Heading 1</h1>
- <h2>Heading 2</h1>
- <p style = 'color: red'> THis is a paragraph</p> 
-''').build(),
-          const LocationWidget(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthStateLoggedIn) {
+                  return Text('${state.user.uid} ${state.user.displayName}');
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            const SizedBox(height: 50),
+            TextButton(
+              onPressed: () {
+                context.read<AuthBloc>().add(Logout());
+              },
+              child: const Text('Log out'),
+            ),
+            BlocConsumer<HistoryBloc, HistoryState>(
+              listener: (context, state) {
+                if (state is HistoryNotFound) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('History not found...Dammmmmm')));
+                }
+                if (state is HistoryFailed) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Dammmmmm ${state.message}')));
+                }
+              },
+              builder: (context, state) {
+                return switch (state) {
+                  HistoryInitial() => const SearchButton(),
+                  HistoryLoading() => const Loader('Loading...'),
+                  GPSLoading() => const Loader('Getting GPS Location...'),
+                  NearestStructureLoading() =>
+                    const Loader('Getting structures nearest to you...'),
+                  MatchingImages() =>
+                    const Loader('Matching to you with AI...'),
+                  DetailLoading() =>
+                    const Loader('Hurray!! Match found. Loading details...'),
+                  HistorySuccess() => Column(
+                      children: [
+                        Text(state.structure.title),
+                        ...state.structure.images
+                            .map((image) => Image.network(image)),
+                        const SizedBox(height: 20),
+                        state.structure.history.build(),
+                      ],
+                    ),
+                  HistoryNotFound() => const SearchButton(),
+                  HistoryFailed() => const SearchButton(),
+                };
+              },
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-class LocationWidget extends StatefulWidget {
-  const LocationWidget({super.key});
+class SearchButton extends StatelessWidget {
+  const SearchButton({
+    super.key,
+  });
 
   @override
-  State<LocationWidget> createState() => _LocationWidgetState();
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () async {
+          final image = await pickImage();
+          if (image == null) return;
+          if (context.mounted) {
+            context
+                .read<HistoryBloc>()
+                .add(SearchPhoto(imageFromUser: image.path));
+          }
+        },
+        child: const Text('Get'));
+  }
 }
 
-class _LocationWidgetState extends State<LocationWidget> {
-  bool loading = false;
-  Stream<Coordinate>? stream;
+class Loader extends StatelessWidget {
+  final String text;
+  const Loader(
+    this.text, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (stream != null)
-          StreamBuilder(
-            stream: stream,
-            builder: (context, snapshot) {
-              final coordinate = snapshot.data;
-              if (coordinate != null) {
-                return Text(
-                    'Location :: lat: ${coordinate.$1} lon: ${coordinate.$2}');
-              } else {
-                return Text('Loading..');
-              }
-            },
-          )
-        else
-          Text('Nothing Yet'),
-        if (loading) CircularProgressIndicator(),
-        TextButton(
-            onPressed: () async {
-              setState(() {
-                loading = true;
-              });
-
-              stream = await GpsRepositoryImpl(
-                      geolocatorAndroid: GeolocatorAndroid())
-                  .liveLocation();
-              setState(() {
-                loading = false;
-              });
-            },
-            child: Text('Get location'))
+        Text(text),
+        const CircularProgressIndicator(),
       ],
     );
   }

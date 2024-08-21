@@ -11,10 +11,10 @@ import 'package:equatable/equatable.dart';
 ///num confidence is the percentage value of how confident the AI is that the two objects are same
 ///   - For example: confidence of 0% is the AI is fully confident that the objects are different, 100% confident means Ai the fully confident that both 0bjects are exactly same.
 class AiResult extends Equatable {
-  bool isSame;
-  String message;
-  num confidence;
-  AiResult({
+  final bool isSame;
+  final String message;
+  final num confidence;
+  const AiResult({
     required this.isSame,
     required this.message,
     required this.confidence,

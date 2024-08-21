@@ -32,7 +32,7 @@ class AiRepositoryImpl implements AiRepository {
           topK: 64,
           topP: 0.95,
           maxOutputTokens: 8192,
-          responseMimeType: 'text/plain',
+          responseMimeType: 'application/json',
         ),
       );
 
