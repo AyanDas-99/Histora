@@ -20,26 +20,18 @@ class GpsRepositoryImpl implements GpsRepository {
   Future<Coordinate> getCurrentLocation() async {
     bool serviceEnabled = await geolocatorAndroid.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      throw GpsException('Turn on location service');
-    }
+      try {
+        final position = await geolocatorAndroid.getCurrentPosition();
+        serviceEnabled = true;
 
-    LocationPermission permission = await geolocatorAndroid.checkPermission();
-
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      permission = await geolocatorAndroid.requestPermission();
-
-      if (permission == LocationPermission.denied) {
-        throw GpsException('Permission denied');
-      } else if (permission == LocationPermission.deniedForever) {
-        throw GpsException(
-            'Permission denied forever. Cannot request persmission');
+        return (position.latitude, position.longitude);
+      } catch (e) {
+        throw GpsException('Accept location service request');
       }
+    } else {
+      final position = await geolocatorAndroid.getCurrentPosition();
+      return (position.latitude, position.longitude);
     }
-
-    final position = await geolocatorAndroid.getCurrentPosition();
-
-    return (position.latitude, position.longitude);
   }
 
   Future<Stream<Coordinate>> liveLocation() async {
