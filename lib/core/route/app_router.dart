@@ -4,27 +4,27 @@ import 'package:go_router/go_router.dart';
 import 'package:histora/core/view/loader_page.dart';
 import 'package:histora/depedency_injector.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
-import 'package:histora/view/auth/login_screen.dart';
 import 'package:histora/view/home/home_screen.dart';
+import 'package:histora/view/onboarding/onboarding_screen.dart';
+import 'package:histora/view/screen_controller.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
     routes: [
-      // Home
+      // Main screen
       GoRoute(
-        path: HomeScreen.path,
-        name: HomeScreen.name,
-        pageBuilder: (context, state) {
-          return const MaterialPage(child: HomeScreen());
-        },
+        path: ScreenController.path,
+        name: ScreenController.name,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: ScreenController()),
       ),
 
-      // Login screen
+      // Onboarding Screen
       GoRoute(
-        path: LoginScreen.path,
-        name: LoginScreen.name,
+        path: OnboardingScreen.path,
+        name: OnboardingScreen.name,
         pageBuilder: (context, state) =>
-            const MaterialPage(child: LoginScreen()),
+            const MaterialPage(child: OnboardingScreen()),
       ),
       // Loader screen
       GoRoute(
@@ -38,9 +38,9 @@ class AppRouter {
       final authState = context.read<AuthBloc>().state;
       return switch (authState) {
         AuthStateLoggedIn() =>
-          sl<AppRouter>().router.namedLocation(HomeScreen.name),
+          sl<AppRouter>().router.namedLocation(ScreenController.name),
         AuthStateLoggedOut() =>
-          sl<AppRouter>().router.namedLocation(LoginScreen.name),
+          sl<AppRouter>().router.namedLocation(OnboardingScreen.name),
         AuthStateUnknown() =>
           sl<AppRouter>().router.namedLocation(LoaderPage.name),
         AuthStateLoading() => null,
