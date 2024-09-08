@@ -43,7 +43,7 @@ class Structure extends Equatable {
       id: map['id'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
-      images: List<String>.from((map['images'] as List<String>)),
+      images: List<String>.from((map['images'] as List)),
       history: History(history: map['history'] as String),
       coordinate: (
         (map['lat'] as num).toDouble(),

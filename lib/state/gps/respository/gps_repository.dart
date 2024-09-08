@@ -19,9 +19,27 @@ class GpsRepositoryImpl implements GpsRepository {
   @override
   Future<Coordinate> getCurrentLocation() async {
     bool serviceEnabled = await geolocatorAndroid.isLocationServiceEnabled();
+
+    LocationPermission permission = await geolocatorAndroid.checkPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      permission = await geolocatorAndroid.requestPermission();
+
+      if (permission == LocationPermission.denied) {
+        throw GpsException('Permission denied');
+      } else if (permission == LocationPermission.deniedForever) {
+        throw GpsException(
+            'Permission denied forever. Cannot request persmission');
+      }
+    }
+
     if (!serviceEnabled) {
       try {
-        final position = await geolocatorAndroid.getCurrentPosition();
+        final position = await geolocatorAndroid.getCurrentPosition(
+            locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.best,
+        ));
         serviceEnabled = true;
 
         return (position.latitude, position.longitude);
@@ -29,7 +47,11 @@ class GpsRepositoryImpl implements GpsRepository {
         throw GpsException('Accept location service request');
       }
     } else {
-      final position = await geolocatorAndroid.getCurrentPosition();
+      final position = await geolocatorAndroid.getCurrentPosition(
+          locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.best,
+      ));
+      print('Determined current gps location as : (${position.latitude}, ${position.longitude})');
       return (position.latitude, position.longitude);
     }
   }

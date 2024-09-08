@@ -29,8 +29,9 @@ void init() {
   // Router
   sl.registerLazySingleton(() => AppRouter());
   // GpsRepository
-  sl.registerLazySingleton<GpsRepository>(
-      () => GpsRepositoryImpl(geolocatorAndroid: sl()));
+  // sl.registerLazySingleton<GpsRepository>(
+  //     () => GpsRepositoryImpl(geolocatorAndroid: sl()));
+  sl.registerFactory<GpsRepository>(() => GpsRepositoryImpl(geolocatorAndroid: sl()));
   // Structure
   sl.registerLazySingleton<StructureRepository>(() => StructureRepositoryImpl(
       storage: sl(), firestore: sl(), httpClient: sl()));
@@ -45,7 +46,7 @@ void init() {
   // Google Sign in
   sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn(scopes: ['email']));
   // GPS Location
-  sl.registerLazySingleton(() => GeolocatorAndroid());
+  sl.registerFactory(() => GeolocatorAndroid());
   // Http
   sl.registerLazySingleton<http.Client>(() => http.Client());
 }

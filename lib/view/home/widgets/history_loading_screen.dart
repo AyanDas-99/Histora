@@ -7,26 +7,47 @@ class HistoryLoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const List<String> allGifs = [
+      'assets/images/whatt-where.gif',
+      'assets/images/joe_finding.gif',
+      'assets/images/images_slideshow.gif',
+      'assets/images/downloading.gif',
+    ];
     return Scaffold(
-      body: Center(
-        child: BlocBuilder<HistoryBloc, HistoryState>(
-          builder: (context, state) {
-            switch (state) {
-              case HistoryLoading():
-                return const Text('History loading...');
-              case GPSLoading():
-                return const Text('GPS Loading...');
-              case NearestStructureLoading():
-                return const Text('Nearest structure loading...');
-              case MatchingImages():
-                return const Text('Matching images');
-              case DetailLoading():
-                return const Text('Found match..Getting details');
-              default:
-                return const Text('Done');
-            }
-          },
-        ),
+      body: BlocBuilder<HistoryBloc, HistoryState>(
+        builder: (context, state) {
+          switch (state) {
+            case GPSLoading():
+              return loader(allGifs[0], 'Getting your location');
+            case NearestStructureLoading():
+              return loader(allGifs[1], 'Finding things in your location');
+            case MatchingImages():
+              return loader(allGifs[2], 'Comparing images with AI...');
+            case DetailLoading():
+              return loader(allGifs[3], 'Getting details for you');
+            default:
+              return const Center(child: Text('All Done'));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget loader(String image, String text) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(image),
+          const SizedBox(height: 20),
+          Text(
+            '$text ...',
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          ),
+        ],
       ),
     );
   }

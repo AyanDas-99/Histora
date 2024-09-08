@@ -31,10 +31,14 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     try {
       emit(GPSLoading());
       final Coordinate coordinates = await gpsRepository.getCurrentLocation();
+      dev.log('Coordinates: $coordinates');
       emit(NearestStructureLoading());
       final List<StructureMeta> metas = await structureRepository
           .getStructureNearestToCoordinate(coordinates);
       dev.log("Nearest structures : $metas");
+      if(metas.isEmpty) {
+        return emit(HistoryNotFound());
+      }
       emit(MatchingImages());
       for (var meta in metas) {
         final images = await _getAllImageBytes(meta.id);

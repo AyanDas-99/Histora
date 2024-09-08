@@ -31,7 +31,7 @@ class History {
       renderMode: RenderMode.column,
 
       // set the default styling for text
-      textStyle: TextStyle(fontSize: 14),
+      textStyle: const TextStyle(fontSize: 14),
     );
   }
 }

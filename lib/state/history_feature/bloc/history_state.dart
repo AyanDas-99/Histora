@@ -9,8 +9,6 @@ sealed class HistoryState extends Equatable {
 
 final class HistoryInitial extends HistoryState {}
 
-final class HistoryLoading extends HistoryState {}
-
 final class GPSLoading extends HistoryState {}
 
 final class NearestStructureLoading extends HistoryState {}

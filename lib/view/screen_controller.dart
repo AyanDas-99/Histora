@@ -90,8 +90,7 @@ class _ScreenControllerState extends ConsumerState<ScreenController> {
                 ][selected],
               ),
             ),
-            if (state is HistoryLoading ||
-                state is GPSLoading ||
+            if (state is GPSLoading ||
                 state is NearestStructureLoading ||
                 state is MatchingImages ||
                 state is DetailLoading)

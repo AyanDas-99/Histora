@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:histora/core/view/loader_page.dart';
 import 'package:histora/depedency_injector.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
-import 'package:histora/view/home/home_screen.dart';
+import 'package:histora/state/structure/models/structure.dart';
+import 'package:histora/view/history/history_screen.dart';
 import 'package:histora/view/onboarding/onboarding_screen.dart';
 import 'package:histora/view/screen_controller.dart';
 
@@ -33,6 +34,16 @@ class AppRouter {
         pageBuilder: (context, state) =>
             const MaterialPage(child: LoaderPage()),
       ),
+      // Loader screen
+      GoRoute(
+        path: HistoryScreen.path,
+        name: HistoryScreen.name,
+        pageBuilder: (context, state) {
+          final Structure structure = state.extra as Structure;
+          return MaterialPage(child: HistoryScreen(structure: structure));
+        },
+      ),
+
     ],
     redirect: (context, state) {
       final authState = context.read<AuthBloc>().state;
