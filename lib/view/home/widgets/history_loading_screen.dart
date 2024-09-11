@@ -18,13 +18,13 @@ class HistoryLoadingScreen extends StatelessWidget {
         builder: (context, state) {
           switch (state) {
             case GPSLoading():
-              return loader(allGifs[0], 'Getting your location');
+              return Loader(allGifs[0], 'Getting your location', 0.1);
             case NearestStructureLoading():
-              return loader(allGifs[1], 'Finding things in your location');
+              return Loader(allGifs[1], 'Finding things in your location', 0.5);
             case MatchingImages():
-              return loader(allGifs[2], 'Comparing images with AI...');
+              return Loader(allGifs[2], 'Comparing images with AI...', 0.7);
             case DetailLoading():
-              return loader(allGifs[3], 'Getting details for you');
+              return Loader(allGifs[3], 'Getting details for you', 0.9);
             default:
               return const Center(child: Text('All Done'));
           }
@@ -32,20 +32,46 @@ class HistoryLoadingScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget loader(String image, String text) {
+class Loader extends StatelessWidget {
+  final String image;
+  final String text;
+  final double progress;
+  const Loader(this.image, this.text, this.progress, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(image),
+          CircleAvatar(
+            radius: 150,
+            backgroundImage: AssetImage(image),
+          ),
           const SizedBox(height: 20),
-          Text(
-            '$text ...',
-            style: const TextStyle(
-              fontSize: 18,
+          SizedBox(
+            width: 250,
+            child: TweenAnimationBuilder<double>(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              tween: Tween<double>(
+                begin: 0,
+                end: progress,
+              ),
+              builder: (context, value, _) => LinearProgressIndicator(
+                value: value,
+                minHeight: 10,
+                valueColor: const AlwaysStoppedAnimation(Colors.blue),
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
+          ),
+          Text(
+            text,
+            textAlign: TextAlign.start,
           ),
         ],
       ),

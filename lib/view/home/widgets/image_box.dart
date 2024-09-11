@@ -9,19 +9,15 @@ class ImageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.width,
-      width: MediaQuery.of(context).size.width ,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(20)),
-      child: image == null
-          ? const Center(
-              child: Text('Click on get picture'),
-            )
-          : Image.file(
-              File(image!),
-              fit: BoxFit.contain,
-            ),
+     child: image == null
+          ? null
+          : ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.file(
+                File(image!),
+                fit: BoxFit.contain,
+              ),
+          ),
     );
   }
 }
