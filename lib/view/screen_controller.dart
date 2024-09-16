@@ -17,45 +17,54 @@ class ScreenController extends ConsumerStatefulWidget {
 }
 
 class _ScreenControllerState extends ConsumerState<ScreenController> {
-  final tabs = <NavigationDestination>[
-    const NavigationDestination(
-      icon: Icon(Icons.house_outlined, color: Colors.grey),
-      label: 'Home',
-      selectedIcon: Icon(
-        Icons.house,
-        color: Colors.white,
-        size: 30,
-      ),
-    ),
-    const NavigationDestination(
-      icon: Icon(Icons.search, color: Colors.grey),
-      label: 'Search',
-      selectedIcon: Icon(
-        Icons.search,
-        color: Colors.white,
-        size: 30,
-      ),
-    ),
-    const NavigationDestination(
-      icon: FaIcon(FontAwesomeIcons.user, size: 20, color: Colors.grey),
-      label: 'Profile',
-      selectedIcon: FaIcon(
-        FontAwesomeIcons.solidUser,
-        size: 25,
-        color: Colors.white,
-      ),
-    ),
-  ];
-
   int selected = 0;
 
   @override
   Widget build(BuildContext context) {
+    final tabs = <NavigationDestination>[
+      NavigationDestination(
+        icon: const FaIcon(
+          FontAwesomeIcons.house,
+          color: Colors.grey,
+          size: 20,
+        ),
+        label: 'Home',
+        selectedIcon: FaIcon(
+          FontAwesomeIcons.house,
+          size: 22,
+          color: Colors.grey.shade700,
+        ),
+      ),
+      NavigationDestination(
+        icon: const FaIcon(
+          FontAwesomeIcons.searchengin,
+          color: Colors.grey,
+          size: 21,
+        ),
+        label: 'Search',
+        selectedIcon: FaIcon(
+          FontAwesomeIcons.searchengin,
+          size: 23,
+          color: Colors.grey.shade700,
+        ),
+      ),
+      NavigationDestination(
+        icon: const FaIcon(FontAwesomeIcons.user, size: 20, color: Colors.grey),
+        label: 'Profile',
+        selectedIcon: FaIcon(
+          FontAwesomeIcons.user,
+          size: 22,
+          color: Colors.grey.shade700,
+        ),
+      ),
+    ];
+
     return BlocBuilder<HistoryBloc, HistoryState>(
       builder: (context, state) {
         return Stack(
           children: [
             Scaffold(
+              backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
                 surfaceTintColor: Colors.transparent,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -69,7 +78,7 @@ class _ScreenControllerState extends ConsumerState<ScreenController> {
               ),
               bottomNavigationBar: NavigationBar(
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                backgroundColor: Colors.black87,
+                // backgroundColor: Colors.black87,
                 indicatorColor: Colors.transparent,
                 elevation: 0,
                 destinations: tabs,

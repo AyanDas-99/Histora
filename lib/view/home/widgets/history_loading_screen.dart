@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:histora/state/history_feature/bloc/history_bloc.dart';
+import 'package:pulsator/pulsator.dart';
 
 class HistoryLoadingScreen extends StatelessWidget {
   const HistoryLoadingScreen({super.key});
@@ -46,10 +47,18 @@ class Loader extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          CircleAvatar(
-            radius: 150,
-            backgroundImage: AssetImage(image),
+          SizedBox(
+            height: 500,
+            child: Pulsator(
+              style: const PulseStyle(color: Colors.blue),
+              count: 3,
+              child: CircleAvatar(
+                radius: 150,
+                backgroundImage: AssetImage(image),
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           SizedBox(

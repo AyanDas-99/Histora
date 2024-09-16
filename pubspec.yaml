@@ -55,6 +55,7 @@ dependencies:
   flutter_animate: ^4.5.0
   font_awesome_flutter: ^10.7.0
   carousel_slider: ^5.0.0
+  pulsator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:

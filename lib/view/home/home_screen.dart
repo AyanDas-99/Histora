@@ -5,6 +5,7 @@ import 'package:histora/core/utils/pick_images.dart';
 import 'package:histora/state/history_feature/bloc/history_bloc.dart';
 import 'package:histora/view/history/history_screen.dart';
 import 'package:histora/view/home/widgets/image_box.dart';
+import 'package:histora/view/widgets/custom_snack_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? selectedImage;
+
+  onUncoverClicked(BuildContext content) {
+    if (selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        customSnackBar(text: 'Get image first ;)', type: SnackBarType.error),
+      );
+    } else {
+      context
+          .read<HistoryBloc>()
+          .add(SearchPhoto(imageFromUser: selectedImage!));
+    }
+  }
 
   getOrResetImage(BuildContext context) async {
     final bool? getFromCamera = await fromCamera(context);
@@ -72,12 +85,20 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            const Text(
-              "Let's see what \nyou're looking at",
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            Center(child: ImageBox(image: selectedImage)),
+            if (selectedImage != null)
+              Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  ImageBox(image: selectedImage!),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedImage = null;
+                        });
+                      },
+                      icon: const Icon(Icons.cancel))
+                ],
+              ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -91,37 +112,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)))),
                       onPressed: () => getOrResetImage(context),
-        
-                      // onPressed: () {
-                      //   Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => HistoryScreen(
-                      //       structure: Structure(
-                      //         id: 'id',
-                      //         title: "The Obelisk of Marina Park",
-                      //         description:
-                      //             "The Obelisk of Marina Park, a towering monument, stands tall as a symbol of maritime heritage. It’s a beacon of history, inspiring visitors to reflect on the ocean’s tales and mysteries.",
-                      //         images: const [
-                      //           "https://firebasestorage.googleapis.com/v0/b/histora-mobile.appspot.com/o/assets%2FThe%20Obelisk%20of%20Marina%20Parke8d34100-3ecd-488f-8c63-f24985f6b284%2Fbe225cde-7ae0-4446-9bed-f2dc80ea5450?alt=media&token=df5862f1-7226-4e8c-9037-04119ae2a1ea",
-                      //           "https://firebasestorage.googleapis.com/v0/b/histora-mobile.appspot.com/o/assets%2FThe%20Obelisk%20of%20Marina%20Parke8d34100-3ecd-488f-8c63-f24985f6b284%2Fb9e59dc1-e1bc-4266-9675-75d84376f74f?alt=media&token=d561ae3b-9d2a-4d2d-9b7e-2b94f8a74844",
-                      //           "https://firebasestorage.googleapis.com/v0/b/histora-mobile.appspot.com/o/assets%2FThe%20Obelisk%20of%20Marina%20Parke8d34100-3ecd-488f-8c63-f24985f6b284%2Fbdf4920b-685a-46bc-b184-cc3fec6df529?alt=media&token=d6d3bc00-0875-4b64-89e1-eaae883047f0",
-                      //         ],
-                      //         history: History(
-                      //             history:
-                      //                 "<p>Rising proudly in Marina Park, this obelisk is a tribute to the maritime history of the region. Its towering presence has inspired countless tales of the sea and stories of exploration.</p> <p>Some say the obelisk was erected to honor the brave souls who ventured into the unknown waters, while others believe it marks a significant navigational point used by ancient mariners.</p> <p>Over the years, the obelisk has become a favorite spot for visitors to ponder the mysteries of the ocean and the legacy of those who sailed before us. Its reflection in the surrounding water is said to resemble a lighthouse guiding lost ships home.</p> <p>Whether a memorial or a marker, the Obelisk of Marina Park continues to stand as a testament to the enduring spirit of adventure and the timeless connection between land and sea.</p>"),
-                      //         coordinate: (11.6698641, 92.7474356),
-                      //       ),
-                      //     ),
-                      //   ));
-                      // },
-        
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(selectedImage == null
-                              ? '  Get a picture'
-                              : 'Replace', style: const TextStyle(color: Colors.white),),
+                          Text(
+                            selectedImage == null
+                                ? '  Get a picture'
+                                : 'Replace',
+                            style: const TextStyle(color: Colors.white),
+                          ),
                           const SizedBox(width: 10),
-                          const FaIcon(FontAwesomeIcons.camera, color: Colors.white,),
+                          const FaIcon(
+                            FontAwesomeIcons.camera,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -135,26 +139,31 @@ class _HomeScreenState extends State<HomeScreen> {
                               : const WidgetStatePropertyAll(Colors.blue),
                           shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)))),
-                      onPressed: selectedImage == null
-                          ? null
-                          : () {
-                              context.read<HistoryBloc>().add(
-                                  SearchPhoto(imageFromUser: selectedImage!));
-                            },
+                      onPressed: () => onUncoverClicked(context),
                       child: BlocConsumer<HistoryBloc, HistoryState>(
                         listener: (context, state) {
                           if (state is HistoryFailed) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(state.message)));
+                              customSnackBar(
+                                text: state.message,
+                                type: SnackBarType.error,
+                              ),
+                            );
                           }
                           if (state is HistoryNotFound) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Not found :(')));
+                              customSnackBar(
+                                  text: 'Not found :(',
+                                  type: SnackBarType.error),
+                            );
                           }
                           if (state is HistorySuccess) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    'Found structure ${state.structure.title}')));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              customSnackBar(
+                                  text:
+                                      'Found structure ${state.structure.title}',
+                                  type: SnackBarType.success),
+                            );
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) =>
