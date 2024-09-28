@@ -21,40 +21,44 @@ class _ScreenControllerState extends ConsumerState<ScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    final tabs = <NavigationDestination>[
+     const tabs = <NavigationDestination>[
       NavigationDestination(
-        icon: const FaIcon(
+        icon: FaIcon(
           FontAwesomeIcons.house,
-          color: Colors.grey,
+          color: Colors.white54,
           size: 20,
         ),
         label: 'Home',
         selectedIcon: FaIcon(
           FontAwesomeIcons.house,
           size: 22,
-          color: Colors.grey.shade700,
+          color: Colors.white,
         ),
       ),
       NavigationDestination(
-        icon: const FaIcon(
+        icon: FaIcon(
           FontAwesomeIcons.searchengin,
-          color: Colors.grey,
+          color: Colors.white54,
           size: 21,
         ),
         label: 'Search',
         selectedIcon: FaIcon(
           FontAwesomeIcons.searchengin,
           size: 23,
-          color: Colors.grey.shade700,
+          color: Colors.white,
         ),
       ),
       NavigationDestination(
-        icon: const FaIcon(FontAwesomeIcons.user, size: 20, color: Colors.grey),
+        icon: FaIcon(
+          FontAwesomeIcons.user,
+          size: 20,
+          color: Colors.white54,
+        ),
         label: 'Profile',
         selectedIcon: FaIcon(
           FontAwesomeIcons.user,
           size: 22,
-          color: Colors.grey.shade700,
+          color: Colors.white,
         ),
       ),
     ];
@@ -63,40 +67,84 @@ class _ScreenControllerState extends ConsumerState<ScreenController> {
       builder: (context, state) {
         return Stack(
           children: [
-            Scaffold(
-              backgroundColor: Colors.grey.shade100,
-              appBar: AppBar(
-                surfaceTintColor: Colors.transparent,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                elevation: 1,
-                shadowColor: Colors.blueGrey.shade50,
-                centerTitle: true,
-                title: const Text(
-                  'HISTORA',
-                  style: TextStyle(fontFamily: 'Rosarivo'),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blue.shade100,
+                    Colors.blue.shade50,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
                 ),
               ),
-              bottomNavigationBar: NavigationBar(
-                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                // backgroundColor: Colors.black87,
-                indicatorColor: Colors.transparent,
-                elevation: 0,
-                destinations: tabs,
-                selectedIndex: selected,
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selected = value;
-                  });
-                },
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: [
-                  const HomeScreen(),
-                  const HomeScreen(),
-                  const HomeScreen()
-                ][selected],
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: AppBar(
+                  elevation: 5,
+                  centerTitle: true,
+                  shadowColor: Colors.blue,
+                  title: const Text(
+                    'HISTORA',
+                    style: TextStyle(
+                        fontFamily: 'Rosarivo',
+                        color: Colors.white,
+                        letterSpacing: 13),
+                  ),
+                  flexibleSpace: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            Colors.blue.shade700,
+                            Colors.blue.shade500,
+                            Color(0xFF00CCFF),
+                            Colors.blue.shade500,
+                            Colors.blue.shade700,
+                          ],
+                          begin: FractionalOffset(0.0, 0.0),
+                          end: FractionalOffset(1.0, 0.0),
+                          tileMode: TileMode.clamp),
+                    ),
+                  ),
+                ),
+                bottomNavigationBar: Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                        Colors.blue,
+                        Color(0xFF00CCFF),
+                      ],
+                          begin: FractionalOffset(0.0, 0.0),
+                          end: FractionalOffset(1.0, 0.0),
+                          tileMode: TileMode.clamp)),
+                  child: NavigationBar(
+                    height: 60,
+                    backgroundColor: Colors.transparent,
+                    overlayColor:
+                        const WidgetStatePropertyAll(Colors.transparent),
+                    indicatorColor: Colors.transparent,
+                    elevation: 0,
+                    destinations: tabs,
+                    selectedIndex: selected,
+                    labelBehavior:
+                        NavigationDestinationLabelBehavior.alwaysHide,
+                    onDestinationSelected: (value) {
+                      setState(() {
+                        selected = value;
+                      });
+                    },
+                  ),
+                ),
+                body: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: [
+                    const HomeScreen(),
+                    const HomeScreen(),
+                    const HomeScreen()
+                  ][selected],
+                ),
               ),
             ),
             if (state is GPSLoading ||
