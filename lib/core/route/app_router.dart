@@ -16,16 +16,40 @@ class AppRouter {
       GoRoute(
         path: ScreenController.path,
         name: ScreenController.name,
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: ScreenController()),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const ScreenController(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            final tween = Tween(begin: begin, end: end);
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
       ),
 
       // Onboarding Screen
-      GoRoute(
+       GoRoute(
         path: OnboardingScreen.path,
         name: OnboardingScreen.name,
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: OnboardingScreen()),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const OnboardingScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            final tween = Tween(begin: begin, end: end);
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ),
       ),
       // Loader screen
       GoRoute(
@@ -43,7 +67,6 @@ class AppRouter {
           return MaterialPage(child: HistoryScreen(structure: structure));
         },
       ),
-
     ],
     redirect: (context, state) {
       final authState = context.read<AuthBloc>().state;

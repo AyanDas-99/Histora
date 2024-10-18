@@ -20,7 +20,7 @@ class Screen2 extends StatelessWidget {
           ),
           ClipRRect(
               borderRadius: BorderRadius.circular(25),
-              child: Image.asset('assets/images/brown.jpeg')),
+              child: Image.asset('assets/images/boy_looking.jpeg')),
           const Text(
             "Take a picture and we'll tell you about it",
             textAlign: TextAlign.center,

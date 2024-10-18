@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:histora/state/history_feature/bloc/history_bloc.dart';
+import 'package:histora/view/explore/explore_screen.dart';
 import 'package:histora/view/home/home_screen.dart';
 import 'package:histora/view/home/widgets/history_loading_screen.dart';
+import 'package:histora/view/profile/profile_screen.dart';
 
 class ScreenController extends ConsumerStatefulWidget {
   static const String name = 'home';
@@ -21,44 +23,44 @@ class _ScreenControllerState extends ConsumerState<ScreenController> {
 
   @override
   Widget build(BuildContext context) {
-     const tabs = <NavigationDestination>[
+    final tabs = <NavigationDestination>[
       NavigationDestination(
         icon: FaIcon(
           FontAwesomeIcons.house,
-          color: Colors.white54,
+          color: Colors.grey,
           size: 20,
         ),
         label: 'Home',
         selectedIcon: FaIcon(
           FontAwesomeIcons.house,
           size: 22,
-          color: Colors.white,
+          color: Colors.blue.shade400,
         ),
       ),
       NavigationDestination(
         icon: FaIcon(
           FontAwesomeIcons.searchengin,
-          color: Colors.white54,
+          color: Colors.grey,
           size: 21,
         ),
         label: 'Search',
         selectedIcon: FaIcon(
           FontAwesomeIcons.searchengin,
           size: 23,
-          color: Colors.white,
+          color: Colors.blue.shade400,
         ),
       ),
       NavigationDestination(
         icon: FaIcon(
           FontAwesomeIcons.user,
           size: 20,
-          color: Colors.white54,
+          color: Colors.grey,
         ),
         label: 'Profile',
         selectedIcon: FaIcon(
           FontAwesomeIcons.user,
           size: 22,
-          color: Colors.white,
+          color: Colors.blue.shade400,
         ),
       ),
     ];
@@ -67,85 +69,32 @@ class _ScreenControllerState extends ConsumerState<ScreenController> {
       builder: (context, state) {
         return Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.blue.shade100,
-                    Colors.blue.shade50,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp,
+            Scaffold(
+              backgroundColor: Colors.grey.shade200,
+              bottomNavigationBar: Container(
+               child: NavigationBar(
+                  height: 80,
+                  backgroundColor: Colors.white,
+                  overlayColor:
+                      const WidgetStatePropertyAll(Colors.transparent),
+                  shadowColor: Colors.grey,
+                  indicatorColor: Colors.transparent,
+                  elevation: 10,
+                  destinations: tabs,
+                  selectedIndex: selected,
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                  onDestinationSelected: (value) {
+                    setState(() {
+                      selected = value;
+                    });
+                  },
                 ),
               ),
-              child: Scaffold(
-                backgroundColor: Colors.transparent,
-                appBar: AppBar(
-                  elevation: 5,
-                  centerTitle: true,
-                  shadowColor: Colors.blue,
-                  title: const Text(
-                    'HISTORA',
-                    style: TextStyle(
-                        fontFamily: 'Rosarivo',
-                        color: Colors.white,
-                        letterSpacing: 13),
-                  ),
-                  flexibleSpace: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                            Colors.blue.shade700,
-                            Colors.blue.shade500,
-                            Color(0xFF00CCFF),
-                            Colors.blue.shade500,
-                            Colors.blue.shade700,
-                          ],
-                          begin: FractionalOffset(0.0, 0.0),
-                          end: FractionalOffset(1.0, 0.0),
-                          tileMode: TileMode.clamp),
-                    ),
-                  ),
-                ),
-                bottomNavigationBar: Container(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                        Colors.blue,
-                        Color(0xFF00CCFF),
-                      ],
-                          begin: FractionalOffset(0.0, 0.0),
-                          end: FractionalOffset(1.0, 0.0),
-                          tileMode: TileMode.clamp)),
-                  child: NavigationBar(
-                    height: 60,
-                    backgroundColor: Colors.transparent,
-                    overlayColor:
-                        const WidgetStatePropertyAll(Colors.transparent),
-                    indicatorColor: Colors.transparent,
-                    elevation: 0,
-                    destinations: tabs,
-                    selectedIndex: selected,
-                    labelBehavior:
-                        NavigationDestinationLabelBehavior.alwaysHide,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selected = value;
-                      });
-                    },
-                  ),
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: [
-                    const HomeScreen(),
-                    const HomeScreen(),
-                    const HomeScreen()
-                  ][selected],
-                ),
-              ),
+              body: [
+                const HomeScreen(),
+                const ExploreScreen(),
+                const ProfileScreen()
+              ][selected],
             ),
             if (state is GPSLoading ||
                 state is NearestStructureLoading ||
