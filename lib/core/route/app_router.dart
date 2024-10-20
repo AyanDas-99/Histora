@@ -7,6 +7,7 @@ import 'package:histora/state/auth/bloc/auth_bloc.dart';
 import 'package:histora/state/structure/models/structure.dart';
 import 'package:histora/view/history/history_screen.dart';
 import 'package:histora/view/onboarding/onboarding_screen.dart';
+import 'package:histora/view/profile/components/travel_history_screen.dart';
 import 'package:histora/view/screen_controller.dart';
 
 class AppRouter {
@@ -66,6 +67,13 @@ class AppRouter {
           final Structure structure = state.extra as Structure;
           return MaterialPage(child: HistoryScreen(structure: structure));
         },
+      ),
+      // Travel history
+      GoRoute(
+        path: TravelHistoryScreen.path,
+        name: TravelHistoryScreen.name,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: TravelHistoryScreen()),
       ),
     ],
     redirect: (context, state) {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:histora/view/profile/components/settings_screen.dart';
+import 'package:histora/view/profile/components/travel_history_screen.dart';
 
 class DetailedStatPages extends StatelessWidget {
   const DetailedStatPages({super.key});
@@ -9,30 +12,36 @@ class DetailedStatPages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10)
-      ),
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
-            title: Text("Travel History"),
-            subtitle: Text(
+            title: const Text("Travel History"),
+            subtitle: const Text(
               'Last seen in Gandhi Park',
               style: TextStyle(color: Colors.blueGrey),
             ),
-            leading: FaIcon(FontAwesomeIcons.personRunning, size: 20),
-            trailing: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            leading: const FaIcon(FontAwesomeIcons.personRunning, size: 20),
+            trailing: const Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            onTap: () {
+              print('clicked');
+              // context.go(TravelHistoryScreen.path);
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const TravelHistoryScreen(),
+              ));
+            },
           ),
-          Divider(thickness: 0.2, color: Colors.blueGrey),
+          const Divider(thickness: 0.2, color: Colors.blueGrey),
           ListTile(
-            title: Text("Settings"),
-            subtitle: Text(
+            title: const Text("Settings"),
+            subtitle: const Text(
               'Create your experience',
               style: TextStyle(color: Colors.blueGrey),
             ),
-            leading: FaIcon(FontAwesomeIcons.wrench, size: 20),
-            trailing: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            leading: const FaIcon(FontAwesomeIcons.wrench, size: 20),
+            trailing: const Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder:(context) => const SettingsScreen(),)),
           ),
         ]
             .animate(interval: 50.ms)

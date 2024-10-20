@@ -3,6 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:histora/state/auth/bloc/auth_bloc.dart';
+import 'package:histora/view/profile/components/about_screen.dart';
+import 'package:histora/view/profile/components/contact_screen.dart';
 
 class ExtrasProfile extends StatefulWidget {
   const ExtrasProfile({super.key});
@@ -67,33 +69,39 @@ class _ExtrasProfileState extends State<ExtrasProfile> {
         children: [
           ListTile(
             onTap: logoutClicked,
-            title: Text("Logout"),
-            subtitle: Text(
+            title: const Text("Logout"),
+            subtitle: const Text(
               'Why would you? But still.',
               style: TextStyle(color: Colors.blueGrey),
             ),
-            leading: FaIcon(FontAwesomeIcons.key, size: 20),
-            trailing: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            leading: const FaIcon(FontAwesomeIcons.key, size: 20),
+            trailing: const Icon(Icons.arrow_forward_ios_sharp, size: 20),
           ),
-          Divider(thickness: 0.2, color: Colors.blueGrey),
+          const Divider(thickness: 0.2, color: Colors.blueGrey),
           ListTile(
-            title: Text("About Us"),
-            subtitle: Text(
+            title: const Text("About Us"),
+            subtitle: const Text(
               'We are an open book. Just ask.',
               style: TextStyle(color: Colors.blueGrey),
             ),
-            leading: FaIcon(FontAwesomeIcons.wrench, size: 20),
-            trailing: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            leading: const FaIcon(FontAwesomeIcons.wrench, size: 20),
+            trailing: const Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const AboutScreen(),
+            )),
           ),
-          Divider(thickness: 0.2, color: Colors.blueGrey),
+          const Divider(thickness: 0.2, color: Colors.blueGrey),
           ListTile(
-            title: Text("Contact Us"),
-            subtitle: Text(
+            title: const Text("Contact Us"),
+            subtitle: const Text(
               "Need help? We're there for you.",
               style: TextStyle(color: Colors.blueGrey),
             ),
-            leading: FaIcon(FontAwesomeIcons.wrench, size: 20),
-            trailing: Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            leading: const FaIcon(FontAwesomeIcons.wrench, size: 20),
+            trailing: const Icon(Icons.arrow_forward_ios_sharp, size: 20),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const ContactScreen(),
+            )),
           ),
         ]
             .animate(interval: 50.ms)
